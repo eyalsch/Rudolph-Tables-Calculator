@@ -1,5 +1,5 @@
-# Rudolph-Tables-Calculator
-The Rudolph table is a table published each year by Prof. Klaus Rudolph for age-appropriate performance evaluation in swimming.
+# Rudolph Tables Calculator
+The Rudolph tables are tables published each year by Prof. Klaus Rudolph for age-appropriate performance evaluation in swimming.
 
 - [0]     Beginner
 - [0-5]   Intermediate
