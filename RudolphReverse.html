@@ -1,0 +1,146 @@
+<html>
+<head>
+	<title>Rudolph Tables Calculator</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/js/bootstrap.min.js"></script>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+</head>
+
+<body>
+<div style="margin: auto;width: 80%;">
+<H2>Reverse Rudolph Tables 2022 Calculator </H2>
+<p>
+The "Rudolph Table" is a table for age-appropriate performance evaluation by <span style="font-weight: bold;">Dr. Klaus Rudolph<sup>&copy;</sup></span>.
+</p>
+<p>
+<span style="font-weight: bold;">Choose Gender, Age, Event, enter the Result and click the BUTTON.</span>
+</p>
+
+<form id="fupForm" name="form1" method="post">
+	<div class="mb-3">
+		<label>Gender: </label>
+		<select id="gender" name="gender" size="2">
+			<option value="Male" selected>Male</option>
+			<option value="Female">Female</option>
+		</select>
+	</div>
+	<div class="mb-3">
+		<label>Age: </label>
+		<select id="age" name="age">
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+			<option value="17">17</option>
+			<option value="18">18</option>
+			<option value="19">Open</option>
+		</select>
+	</div>
+	<div class="mb-3">
+		<label>Event: </label>
+		<select id="event" name="event">
+			<option value="50 Freestyle">50 Freestyle</option>
+			<option value="100 Freestyle">100 Freestyle</option>
+			<option value="200 Freestyle">200 Freestyle</option>
+			<option value="400 Freestyle">400 Freestyle</option>
+			<option value="800 Freestyle">800 Freestyle</option>
+			<option value="1500 Freestyle">1500 Freestyle</option>
+			<option value="50 Breaststroke">50 Breaststroke</option>
+			<option value="100 Breaststroke">100 Breaststroke</option>
+			<option value="200 Breaststroke">200 Breaststroke</option>
+			<option value="50 Butterfly">50 Butterfly</option>
+			<option value="100 Butterfly">100 Butterfly</option>
+			<option value="200 Butterfly">200 Butterfly</option>
+			<option value="50 Backstroke">50 Backstroke</option>
+			<option value="100 Backstroke">100 Backstroke</option>
+			<option value="200 Backstroke">200 Backstroke</option>
+			<option value="200 Medley">200 Medley</option>
+			<option value="400 Medley">400 Medley</option>
+			<option value="ALL">ALL</option>
+		</select>
+	</div>
+	<div class="mb-3">
+		<label>Points: </label>
+		<select id="points" name="points">
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+			<option value="17">17</option>
+			<option value="18">18</option>
+			<option value="19">19</option>
+			<option value="20">20</option>
+		</select>	</div>
+	<input type="button" name="Calculate" class="btn btn-primary" value="Calculate" id="butcal">		
+</form>
+<div id="result" style="font-weight: bold; font-size: 120%;"></div>
+</div>
+
+<script>
+
+$(document).ready(function() {
+	$('#butcal').click(function(){  
+		var year = 2022;
+		var gender = $('#gender').val().charAt(0);
+		var age = $('#age').val();
+		var event = $('#event').val();
+		var points = $('#points').val();
+				
+		console.log('year:', year);
+		console.log('gender:', gender);
+		console.log('age:', age);
+		console.log('event:', event);
+		console.log('points:', points);
+
+		$.ajax({
+			url: "RudolphReverse.php",
+			type: "GET",
+			data: {
+				year: year,
+				gender: gender,
+				age: age,
+				event: event,
+				points: points,
+			},
+			beforeSend: function() {
+				document.getElementById('result').innerHTML = "<div class=\"spinner-border text-primary\"></div>";
+			},
+			success: function(dataResult, status, xhr){
+				if (event=="ALL") {
+					document.getElementById('result').innerHTML = dataResult;
+				} 
+				else {
+					document.getElementById('result').textContent = "Result: " + dataResult;
+				}
+			},
+			error: function(xhr){
+				console.log("An error occured: " + xhr.status + " " + xhr.statusText);
+				alert("An error occured.\n" + xhr.status + " " + xhr.statusText);
+			}
+		});
+	});
+});
+
+</script>
+
+</body>
+
+</html>
