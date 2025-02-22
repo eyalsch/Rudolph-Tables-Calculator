@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Reverse Rudolph Tables 2025 Calculator</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<link rel="stylesheet" href="Rudolph.css">
+</head>
+
+<body>
+<div style="margin: auto;width: 80%;">
+<H2>Reverse Rudolph Tables 2025 Calculator</H2>
+<p>
+The "Rudolph Table" is a table for age-appropriate performance evaluation by <span style="font-weight: bold;">Dr. Klaus Rudolph<sup>&copy;</sup></span>.
+</p>
+<p>
+<span style="font-weight: bold;">Choose Gender, Age, Event, enter the Result and click the BUTTON.</span>
+</p>
+
+<form id="fupForm" name="form1" method="post">
+	<div class="mb-3">
+		<label>Gender: </label>
+		<select id="gender" name="gender" size="2">
+			<option value="Male" selected>Male</option>
+			<option value="Female">Female</option>
+		</select>
+	</div>
+	<div class="mb-3">
+		<label>Age: </label>
+		<select id="age" name="age">
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+			<option value="17">17</option>
+			<option value="18">18</option>
+			<option value="19">Open</option>
+		</select>
+	</div>
+	<div class="mb-3">
+		<label>Event: </label>
+		<select id="event" name="event">
+			<option value="50 Freestyle">50 Freestyle</option>
+			<option value="100 Freestyle">100 Freestyle</option>
+			<option value="200 Freestyle">200 Freestyle</option>
+			<option value="400 Freestyle">400 Freestyle</option>
+			<option value="800 Freestyle">800 Freestyle</option>
+			<option value="1500 Freestyle">1500 Freestyle</option>
+			<option value="50 Breaststroke">50 Breaststroke</option>
+			<option value="100 Breaststroke">100 Breaststroke</option>
+			<option value="200 Breaststroke">200 Breaststroke</option>
+			<option value="50 Butterfly">50 Butterfly</option>
+			<option value="100 Butterfly">100 Butterfly</option>
+			<option value="200 Butterfly">200 Butterfly</option>
+			<option value="50 Backstroke">50 Backstroke</option>
+			<option value="100 Backstroke">100 Backstroke</option>
+			<option value="200 Backstroke">200 Backstroke</option>
+			<option value="200 Medley">200 Medley</option>
+			<option value="400 Medley">400 Medley</option>
+			<option value="ALL">ALL</option>
+		</select>
+	</div>
+	<div class="mb-3">
+		<label>Points: </label>
+		<select id="points" name="points">
+			<option value="1">1</option>
+			<option value="2">2</option>
+			<option value="3">3</option>
+			<option value="4">4</option>
+			<option value="5">5</option>
+			<option value="6">6</option>
+			<option value="7">7</option>
+			<option value="8">8</option>
+			<option value="9">9</option>
+			<option value="10">10</option>
+			<option value="11">11</option>
+			<option value="12">12</option>
+			<option value="13">13</option>
+			<option value="14">14</option>
+			<option value="15">15</option>
+			<option value="16">16</option>
+			<option value="17">17</option>
+			<option value="18">18</option>
+			<option value="19">19</option>
+			<option value="20">20</option>
+		</select>	</div>
+	<input type="button" name="Calculate" class="btn-blue" value="Calculate" id="butcal">
+</form>
+<div id="result" style="font-weight: bold; font-size: 120%;"></div>
+<div id="spinner" style="display: none;">
+  <div class="spinner"></div>
+</div>
+</div>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('butcal').addEventListener('click', function() {
+		var year = 2025;
+        var gender = document.getElementById('gender').value.charAt(0);
+        var age = document.getElementById('age').value;
+        var event = document.getElementById('event').value;
+		var points = document.getElementById('points').value;
+				
+		console.log('year:', year);
+		console.log('gender:', gender);
+		console.log('age:', age);
+		console.log('event:', event);
+		console.log('points:', points);
+
+        document.getElementById('spinner').style.display = 'block';
+
+		fetch("RudolphReverse.php?year=" + year + "&gender=" + gender + "&age=" + age + "&event=" + event + "&points=" + points)
+			.then(response => {
+				if (!response.ok) {
+					throw new Error("An error occurred: " + response.status + " " + response.statusText);
+				}
+				return response.text();
+			})
+			.then(dataResult => {
+				console.log('success ', dataResult);
+				if (event=="ALL") {
+					document.getElementById('result').innerHTML = dataResult;
+				} 
+				else {
+					document.getElementById('result').textContent = "Result: " + dataResult;
+				}			})
+			.catch(error => {
+				console.log(error.message);
+				alert(error.message);
+			})
+			.finally(() => {
+				document.getElementById('spinner').style.display = 'none';
+			});
+			
+	});
+});
+</script>
+</body>
+</html>
