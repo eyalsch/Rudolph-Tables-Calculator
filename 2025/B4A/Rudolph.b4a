@@ -1,0 +1,112 @@
+﻿Build1=Default,b4a.example
+File1=Layout.bal
+FileGroup1=Default Group
+Group=Default Group
+Library1=core
+Library2=okhttputils2
+Library3=reflection
+ManifestCode='This code will be applied to the manifest file during compilation.~\n~'You do not need to modify it in most cases.~\n~'See this link for for more information: https://www.b4x.com/forum/showthread.php?p=78136~\n~AddManifestText(~\n~<uses-sdk android:minSdkVersion="21" android:targetSdkVersion="34"/>~\n~<supports-screens android:largeScreens="true" ~\n~    android:normalScreens="true" ~\n~    android:smallScreens="true" ~\n~    android:anyDensity="true"/>)~\n~SetApplicationAttribute(android:icon, "@drawable/icon")~\n~SetApplicationAttribute(android:label, "$LABEL$")~\n~CreateResourceFromFile(Macro, Themes.LightTheme)~\n~'End of default text.~\n~SetApplicationAttribute(android:usesCleartextTraffic, "true")~\n~
+Module1=ClsWheel
+Module2=Starter
+NumberOfFiles=1
+NumberOfLibraries=3
+NumberOfModules=2
+Version=13.1
+@EndOfDesignText@
+#Region  Project Attributes 
+	#ApplicationLabel: Rudolph
+	#VersionCode: 1
+	#VersionName: 1
+	'SupportedOrientations possible values: unspecified, landscape or portrait.
+	#SupportedOrientations: portrait
+	#CanInstallToExternalStorage: False
+#End Region
+
+#Region  Activity Attributes 
+	#FullScreen: False
+	#IncludeTitle: False
+#End Region
+
+Sub Process_Globals
+	'These global variables will be declared once when the application starts.
+	'These variables can be accessed from all modules.
+	Private hc As HttpJob
+End Sub
+
+Sub Globals
+	'These global variables will be redeclared each time the activity is created.
+	Dim whlResult As ClsWheel
+	Dim spnYear As Spinner
+	Dim spnGender As Spinner
+	Dim spnAge As Spinner
+	Dim spnEvent As Spinner
+	Dim lblResp As Label
+	Dim lblResultWheel As Label
+	Private btnCalc As Button
+End Sub
+
+Sub Activity_Create(FirstTime As Boolean)
+	Activity.LoadLayout("Layout")
+	If FirstTime Then
+		hc.Initialize("Calculate", Me)
+	End If
+	spnYear.AddAll (Array As String("2025","2024","2023","2022","2021","2020","2019"))
+	spnGender.AddAll (Array As String("Female", "Male"))
+	spnAge.AddAll (Array As String("8","9","10","11","12","13","14","15","16","17","18","Open"))
+	spnEvent.AddAll (Array As String("50 Freestyle","100 Freestyle","200 Freestyle","400 Freestyle", _
+	"800 Freestyle","1500 Freestyle","50 Breaststroke","100 Breaststroke","200 Breaststroke", _
+	"50 Butterfly","100 Butterfly","200 Butterfly","50 Backstroke","100 Backstroke","200 Backstroke", _
+	"200 Medley","400 Medley"))
+	
+	whlResult.Initialize(Me, Activity, "Minutes, Seconds, Milliseconds", 3, Null, 24, 9, True)
+End Sub
+
+Sub Activity_Resume
+
+End Sub
+
+Sub Activity_Pause (UserClosed As Boolean)
+
+End Sub
+
+Sub JobDone (Job As HttpJob)
+	If Job.Success = True Then
+		Dim ret As String 
+		ret = Job.GetString 
+		If Job.JobName = "Calculate" Then
+			lblResp.Text = ret
+		End If
+	Else
+		ToastMessageShow("Error: " & Job.ErrorMessage, True)	
+	End If
+	Job.Release
+End Sub
+
+
+Private Sub lblResultWheel_Click
+	btnCalc.Visible=False
+	whlResult.Show2("whlCustom", lblResultWheel.Text)
+End Sub
+
+Sub whlCustom_Closed(Canceled As Boolean, Selection As String)
+	If Canceled = False Then
+		lblResultWheel.Text = Selection
+	End If
+	btnCalc.Visible=True
+End Sub
+
+Private Sub btnCalc_Click
+	Dim Url As String
+	Dim Age As String
+	Age = spnAge.SelectedItem
+	If Age = "Open" Then
+		Age = "19"
+	End If
+	Url = "http://www.duckdns.org/Rudolph/Rudolph.php?year=" & spnYear.SelectedItem & _
+			"&gender=" & spnGender.SelectedItem & _
+			"&age=" & Age & _
+			"&event=" & spnEvent.SelectedItem & _
+			"&result=" & "00:"&lblResultWheel.Text.SubString2(0, 2)&":"&lblResultWheel.Text.SubString2(3, 5)&"."&lblResultWheel.Text.SubString2(6, 8)
+	'lblResp.Text = Url
+	hc.Download(Url)
+End Sub
